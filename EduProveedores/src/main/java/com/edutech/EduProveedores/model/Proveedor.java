@@ -20,15 +20,15 @@ import lombok.NoArgsConstructor;
 public class Proveedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     
-    @Column(length = 30, nullable = false, unique = false)
+    @Column(nullable = false)
     private String nombre;
 
-    @Column(length = 30, nullable = false, unique = false)
+    @Column(nullable = false)
     private String categoria;
 
-    @Column(length = 200, nullable = false, unique = false)
+    @Column(nullable = false)
     private String contacto;
 
 }

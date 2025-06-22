@@ -43,25 +43,25 @@ public class ProveedorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Proveedor> obtenerProveedorPorId(@PathVariable int id) {
+    public ResponseEntity<Proveedor> obtenerProveedorPorId(@PathVariable Long id) {
         return proveedorService.buscarxId(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(()-> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Proveedor> actualizarProveedor(@PathVariable int id, @RequestBody Proveedor updatedProveedor) {
-        return proveedorService.actualizarProveedor(id, updatedProveedor)
-                .map(ResponseEntity::ok)
-                .orElseGet(()-> ResponseEntity.notFound().build());
+    public ResponseEntity<Proveedor> actualizarProveedor(@PathVariable Long id, @RequestBody Proveedor updatedProveedor) {
+        try{
+            Proveedor proveedorActualizado = proveedorService.actualizarProveedor(id, updatedProveedor);
+            return ResponseEntity.ok(proveedorActualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarProveedor(@PathVariable int id) {
-        if(proveedorService.eliminarProveedor(id)){
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> eliminarProveedor(@PathVariable Long id) {
+        proveedorService.eliminarProveedor(id);
+        return ResponseEntity.noContent().build();
     }
 }
