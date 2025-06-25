@@ -39,10 +39,29 @@ class ProveedorControllerTest {
         Proveedor proveedor2 = new Proveedor(2L, "CienciasFascinantes", "Ciencias", "cfascinantes@contacto.cl");
     
         Mockito.when(proveedorService.listarProveedores()).thenReturn(Arrays.asList(proveedor1, proveedor2));
-        mockMvc.perform(get("/api/proveedores"))
+        mockMvc.perform(get("/api/v0/proveedores"))
                 //.contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].nombre").value("MateSimples"))
                 .andExpect(jsonPath("$[1].categoria").value("Ciencias"));
     }
+
+
+    @Test
+    void testCrearProveedor() throws Exception{
+        Proveedor nuevo = new Proveedor(null, "MateSimples", "Matematicas", "msimples@contacto.cl");
+        Proveedor guardado = new Proveedor(1L, "MateSimples", "Matematicas", "msimples@contacto.cl");
+    
+        Mockito.when(proveedorService.crearProveedor(any(Proveedor.class)))
+                .thenReturn(guardado);
+
+        mockMvc.perform(post("/api/v0/proveedores")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(nuevo)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.nombre").value("MateSimples"));
+    
+    }
+
 }
