@@ -64,4 +64,11 @@ class ProveedorControllerTest {
     
     }
 
+    @Test
+    void testObtenerXidNoExistente() throws Exception{
+        Mockito.when(proveedorService.buscarxId(999L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/v0/proveedores/999"))
+                .andExpect(status().isNotFound());
+    }
 }
