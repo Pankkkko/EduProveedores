@@ -19,7 +19,7 @@ import com.edutech.EduProveedores.repository.ProveedorRepository;
 import com.edutech.EduProveedores.service.ProveedorService;
 
 @RestController
-@RequestMapping("/api/v1/proveedores")
+@RequestMapping("/api/v0/proveedores")
 public class ProveedorController {
     private final ProveedorService proveedorService;
 
