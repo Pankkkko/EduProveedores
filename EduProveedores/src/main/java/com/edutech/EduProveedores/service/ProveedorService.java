@@ -11,12 +11,8 @@ import com.edutech.EduProveedores.repository.ProveedorRepository;
 
 @Service
 public class ProveedorService{
-    private final ProveedorRepository proveedorRepository;
-
     @Autowired
-    public ProveedorService(ProveedorRepository proveedorRepository) {
-        this.proveedorRepository = proveedorRepository;
-    }
+    private ProveedorRepository proveedorRepository;
 
     public Proveedor crearProveedor(Proveedor proveedor) {
         return proveedorRepository.save(proveedor);
