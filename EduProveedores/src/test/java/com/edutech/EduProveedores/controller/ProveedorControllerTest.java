@@ -39,7 +39,7 @@ class ProveedorControllerTest {
         Proveedor proveedor2 = new Proveedor(2L, "CienciasFascinantes", "Ciencias", "cfascinantes@contacto.cl");
     
         Mockito.when(proveedorService.listarProveedores()).thenReturn(Arrays.asList(proveedor1, proveedor2));
-        mockMvc.perform(get("/api/proveedores"))
+        mockMvc.perform(get("/api/v0/proveedores"))
                 //.contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].nombre").value("MateSimples"))
