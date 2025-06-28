@@ -45,4 +45,30 @@ class ProveedorControllerTest {
                 .andExpect(jsonPath("$[0].nombre").value("MateSimples"))
                 .andExpect(jsonPath("$[1].categoria").value("Ciencias"));
     }
+
+
+    @Test
+    void testCrearProveedor() throws Exception{
+        Proveedor nuevo = new Proveedor(null, "MateSimples", "Matematicas", "msimples@contacto.cl");
+        Proveedor guardado = new Proveedor(1L, "MateSimples", "Matematicas", "msimples@contacto.cl");
+    
+        Mockito.when(proveedorService.crearProveedor(any(Proveedor.class)))
+                .thenReturn(guardado);
+
+        mockMvc.perform(post("/api/v0/proveedores")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(nuevo)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.nombre").value("MateSimples"));
+    
+    }
+
+    @Test
+    void testObtenerXidNoExistente() throws Exception{
+        Mockito.when(proveedorService.buscarxId(999L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/v0/proveedores/999"))
+                .andExpect(status().isNotFound());
+    }
 }

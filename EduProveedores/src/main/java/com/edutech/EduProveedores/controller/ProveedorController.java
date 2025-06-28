@@ -3,7 +3,6 @@ package com.edutech.EduProveedores.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,31 +14,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edutech.EduProveedores.model.Proveedor;
-import com.edutech.EduProveedores.repository.ProveedorRepository;
 import com.edutech.EduProveedores.service.ProveedorService;
 
 @RestController
 @RequestMapping("/api/v0/proveedores")
 public class ProveedorController {
-    private final ProveedorService proveedorService;
 
     @Autowired
-    private ProveedorRepository proveedorRepository;
-
-    @Autowired
-    public ProveedorController(ProveedorService proveedorService) {
-        this.proveedorService = proveedorService;
-    }
+    private ProveedorService proveedorService;
 
     @PostMapping
-    public ResponseEntity<Proveedor> crearProveedor(@RequestBody Proveedor proveedor) {
-        Proveedor nuevoProveedor = proveedorService.crearProveedor(proveedor);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProveedor);
+    public Proveedor crearProveedor(@RequestBody Proveedor proveedor) {
+        return proveedorService.crearProveedor(proveedor);
     }
 
     @GetMapping
     public List<Proveedor> obtenerTodosLosProveedores() {
-        return proveedorRepository.findAll();
+        return proveedorService.listarProveedores();
     }
 
     @GetMapping("/{id}")
