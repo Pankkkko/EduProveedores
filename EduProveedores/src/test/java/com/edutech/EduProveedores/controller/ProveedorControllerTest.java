@@ -71,4 +71,46 @@ class ProveedorControllerTest {
         mockMvc.perform(get("/api/v0/proveedores/999"))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void testActualizarProveedor() throws Exception {
+        Proveedor proveedorExistente = new Proveedor(1L, "MateSimples", "Matematicas", "msimples@contacto.cl");
+        Proveedor proveedorActualizado = new Proveedor(1L, "MateSimples", "Matematicas", "msimples@contacto.cl");
+        Mockito.when(proveedorService.buscarxId(1L)).thenReturn(Optional.of(proveedorExistente));
+        Mockito.when(proveedorService.actualizarProveedor(eq(1L), any(Proveedor.class)))
+                .thenReturn(proveedorActualizado);
+        mockMvc.perform(put("/api/v0/proveedores/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(proveedorActualizado)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.nombre").value("MateSimples"));
+        
+                Mockito.verify(proveedorService).actualizarProveedor(eq(1L), any(Proveedor.class));   
+    }
+
+    @Test
+    void testEliminarProveedor() throws Exception {
+        Long idProveedor = 1L;
+        Mockito.doNothing().when(proveedorService).eliminarProveedor(idProveedor);
+        
+        mockMvc.perform(delete("/api/v0/proveedores/{id}", idProveedor))
+                .andExpect(status().isNoContent()); // error 204 No Content
+
+        Mockito.verify(proveedorService).eliminarProveedor(idProveedor);
+    }
+
+    @Test
+    void testActualizarProveedorNoExistente() throws Exception {
+        Long idProveedor = 999L;
+        Proveedor proveedorActualizado = new Proveedor(idProveedor, "MateSimples", "Matematicas", "msimples@contacto.cl");
+        // lanza excepcion cuando no encuentra el prov
+        Mockito.when(proveedorService.actualizarProveedor(Mockito.eq(idProveedor), Mockito.any(Proveedor.class)))
+                .thenThrow(new RuntimeException("Proveedor no encontrado"));
+
+        mockMvc.perform(put("/api/v0/proveedores/{id}", idProveedor)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(proveedorActualizado)))
+                .andExpect(status().isNotFound());
+    }
 }

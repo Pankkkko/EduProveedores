@@ -83,4 +83,22 @@ public class ProveedorServiceTest {
         verify(proveedorRepository).findById(idProveedor);
     }
 
+    @Test
+    public void testActualizarProveedor() {
+        Long idProveedor = 1L;
+        Proveedor proveedorExistente = new Proveedor(idProveedor, "MateSimples", "Matematicas", "msimples@contacto.cl");
+        Proveedor proveedorActualizado = new Proveedor(idProveedor, "MateSimples", "Matematicas", "msimples@contacto.cl");
+
+        when(proveedorRepository.findById(idProveedor)).thenReturn(Optional.of(proveedorExistente));
+        when(proveedorRepository.save(any(Proveedor.class))).thenReturn(proveedorActualizado);
+        Proveedor resultado = proveedorService.actualizarProveedor(idProveedor, proveedorActualizado);
+        assertThat(resultado).isNotNull();
+        assertThat(resultado.getId()).isEqualTo(idProveedor);
+        assertThat(resultado.getNombre()).isEqualTo("MateSimples");
+        assertThat(resultado.getCategoria()).isEqualTo("Matematicas");
+        assertThat(resultado.getContacto()).isEqualTo("msimples@contacto.cl");
+        verify(proveedorRepository).findById(idProveedor);
+        verify(proveedorRepository).save(proveedorActualizado);
+    }
+
 }
